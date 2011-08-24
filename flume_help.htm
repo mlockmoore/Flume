@@ -1,0 +1,335 @@
+<html>
+<title>Flume Help</title>
+<body>
+<H1>Flume</H1>
+<img src="flume.gif">
+<p>BETA Version 0.9.2, December 2010</p>
+<a href="#cmdopts">Command-line options</a><br>
+<a href="#cmdline">Command-line mode</a><br>
+<a href="#entry">Entering Expressions</a><br>
+<a href="#rpn">RPN mode</a><br>
+<a href="#sig">Significance</a><br>
+<a href="#funcs">Operators, functions, and constants</a><br>
+<a href="#refs">Referring to prior results</a><br>
+<a href="#files">Files</a><br>
+<a href="#quirks">Quirks and Tricks</a><br>
+<a href="#support">Support</a><br>
+
+<H2>Introduction</H2>
+<p>Flume is a fast, light utilitarian math environment.  It can be 
+used from the command-line for simple calculations, or in GUI form as 
+a desktop calculator or a one-column spreadsheet. Calculations are 
+performed with your CPU's floating point hardware, so the range and 
+precision of numbers are somewhat limited, but suitable for most 
+uses. Flume uses the FLTK user interface library, 
+which makes it is especially efficient on TinyCore Linux.  The source 
+code of Flume is released under the GNU license.  See 
+<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> for more details.
+</p>
+<p>
+CAUTION: Flume 0.9.2 is BETA SOFTWARE.  While due care was taken during
+development, it has not been tested exhaustively.  Mathematical
+calculations in Flume are done within the precision and limitations of
+IEEE-standardized floating-point computations.  Flume does NOT have
+arbitrarily high precision (like some math packages), and is subject to
+round-off errors and other issues.  DO NOT use Flume BETA as your sole
+mathematics tool for your P.h. D dissertation, preparing tax filings, or
+unlocking the secrets of an ancient script.  Even when Flume BETA is used
+in more mundane applications, it is likely at some point to produce an
+inaccurate result, lose your work, steal your dog, tell an embarrassing story
+at your wedding, or otherwise do something that disappoints you.  Please help 
+make Flume better by <a href="#support">reporting bugs and offering 
+suggestions</a>.  
+Suggestions are especially welcome that come with specific test cases 
+that reproduce errors or code changes that can be easily integrated.  Thanks!
+</p>
+<a name="cmdopts"></a>
+<H2>Command-Line Options</H2>
+<p>
+<table>
+    <tr>
+        <td>--f filename </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>load content of file "filename" into work area upon startup</td>
+    </tr>
+    <tr>
+        <td>--d </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>angles expressed as degrees</td>
+    </tr>
+    <tr>
+        <td>--r </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>angles expressed as radians (default)</td>
+    </tr>
+    <tr>
+        <td>--t N </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>"terseness", with N = 0(very verbose) to 5 (very terse)</td>
+    </tr>
+    <tr>
+        <td>--p </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>"Reverse-Polish Notation input mode</td>
+    </tr>
+    <tr>
+        <td>--v </td> 
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>print name and version on command-line</td>
+    </tr>
+</table>
+</p>
+
+
+<a name="cmdline"></a>
+<H2>Command-Line Mode</H2>
+<p>
+If you invoke Flume from the command line and provide it a mathematical 
+expression after any command-line options, Flume will immediately 
+try to calculate and print the result and then exit without opening the 
+graphical user interface (GUI).  For example, if you enter:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$ flume 6*7[Enter]<br>
+you will see the result:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;6 * 7 = 42<br>
+Command-line mode will only parse and calculate one result, so some 
+features of Flume, such as references, will not work properly.  If your 
+expression contains any characters that are special for the 
+command-line shell, such as parentheses, please enclose your 
+expression in double-quotes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$ flume "1.0+(2.0*2.0)"[Enter]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.0 + (2.0 * 2.0) = 5.0<br>
+</p>
+
+<a name="entry"></a>
+<p>Flume supports the following number formats:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Decimal integer:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Real number:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Scientific notation:&nbsp;7.0e0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Hexadecimal integer:&nbsp;0x07 or 0X07<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Binary integer:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0`111 or 0b111 or 0B111<br>
+Note the first form of binary notation uses a back-quote, not 
+single-quote!  Negative numbers should be prefaced with a - (dash) 
+with no space before the numerals. </p>
+
+<p>In normal (non-RPN input mode), Flume will parse your entries and try to provide 
+grouping parentheses to resolve any ambiguity in the order of 
+operations.  For example, if you enter the expression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2*3+4^2<br>
+You will see flume re-write the expression as:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(2 * 3) + (4 ^ 2)<br>
+If this grouping is not what you intended, please edit the expression 
+with the exact grouping you need.
+</p>
+
+<p>Comments may be added to the end of an expression a semi-colon:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sin(pi / 4.0) ; sine of 45 degrees</p>
+
+<p>All expressions in the main workspace area are recalculated each time 
+you press the Enter key, so you may easily edit and update 
+multiple results as in spreadsheet applications. Comments will be 
+preserved, but any text between the equal symbol and the first 
+semi-colon will be replaced by new results.</p>
+
+<p>It is acceptable to enter a single number by itself as an 
+expression, which is simply evaluated as the entered value (identity 
+principle).  This form is useful for changeable input values used in 
+a later calculation.  For example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;5.0 = 5.0 ; width, inches<br>
+&nbsp;&nbsp;&nbsp;&nbsp;7.0 = 7.0 ; length, inches<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.0 = 3.0 ; height, inches<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p[3] * p[2] * p[1] = 105.0 ; volume, cubic inches<br>
+</p>
+<a name="rpn"></a>
+<p><b>RPN mode:</b>&nbsp;&nbsp;When the "RPN mode" checkbox is checked, Flume will 
+accept calculation entries in "Reverse Polish Notation", much like the 
+RPN calculators of the past or the programming language Forth.  To multiply 
+3 by 2 then add one, you may enter:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3 2 * 1 +<br>
+Because RPN keeps unused operands on a stack, you can achieve the same 
+calculation by entering:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1 3 2 * +<br>
+Here the * operation takes the 3 and 2 off the stack and multiplies them
+and leaves the intermediate result 6 on the stack.  Then the + operation 
+takes the 6 and 1 left on the stack at the beginning and adds them, leaving
+7 on the stack.  Flume then prints this result 7 after the equal symbol. 
+RPN input does not require parentheses and the order of items in the 
+notation directly corresponds to the evaluation order during processing, 
+which is why some people prefer it.
+</p>
+<a name="sig"></a>
+<p><b>Track significance:</b>&nbsp;&nbsp;When working with measurements 
+of real physical quantities, limitations of accuracy and precision make 
+the signficance of some digits certain, while other digits are uncertain. 
+To avoid making unsupportable assumptions about the precision of results 
+of calculations involving these quantities, results involving them should 
+be rounded to an appropriate degree based on defined "signficance rules".
+In Flume, rounding of displayed results according to significance rules 
+may be activated by the "Track significance" checkbox.</p>
+<p>
+Currently, Flume implements signficance rules only for addition, subtraction, 
+multiplication, and division.  The significance of entred values depends
+on the number type (integer, real, or scientific) and number of digits
+and decimal point (if any) used in the orginal expression.  Hexadecimal 
+and binary numbers are considered significant to the ones place; however, 
+since the current significance rules are not intended to support 
+non-decimal numbers, the use of them in "Track significance" mode is not 
+recommended. Decimal 
+integers are considered signficant to the "ones" place, unless the number 
+ends in one or more zeros: 100 is significant only to the "hundreds" 
+place (if all three  digits were intended as significant, it would be 
+better to enter this  value as "100."; in other words, as a real number 
+with no fractional  digits). 
+Real  numbers are significant to last digit in the original 
+expression, and scientific numbers are significant to the last digit in 
+the mantissa of the original expression.</p>
+<a name="funcs"></a>
+<H2>Operators, Functions, and Constants</H2>
+<p>
+The spelling of operators, functions, and constants is generally 
+case-insensitive with exceptions noted below.</p>
+
+<p>The following infix operators are used between two numbers or 
+sub-expressions:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x or X&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply, or part of hex number if directly preceded by zero<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply (e.g. "1/2 of 732")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divide<br>
+&nbsp;&nbsp;&nbsp;&nbsp;^&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise to a power<br>
+&nbsp;&nbsp;&nbsp;&nbsp;MOD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;integer modulus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&amp; or AND&nbsp;&nbsp;&nbsp;&nbsp;bit-wise integer AND<br>
+&nbsp;&nbsp;&nbsp;&nbsp;| or OR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bit-wise integer OR<br>
+&nbsp;&nbsp;&nbsp;&nbsp;XOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bit-wise integer exclusive-OR<br>
+</p>
+<p>
+The following prefix operator should be used before its operand:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;~&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bit-wise integer NOT 
+(invert)<br></p>
+<p>
+The following postfix operators should be used after their operand:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divide by 100.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;factorial (non-neg. 
+integers only)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as hex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display in hexadecimal format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as bin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display in binary format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display in decimal integer format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as real&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display in real number format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as sci&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display in scientific notation format<br>
+</p>
+<p>
+Flume can compute the following functions:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sqrt()&nbsp;&nbsp;&nbsp;square root<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sin()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sine of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cos()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cosine of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tan()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tangent of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;arcsin()&nbsp;&nbsp;&nbsp;&nbsp;arcsine (inverse sine) of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;arccos()&nbsp;&nbsp;&nbsp;&nbsp;arccosine (inverse cosine) of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;arctan()&nbsp;&nbsp;&nbsp;&nbsp;arctangent (inverse tangent) of an angle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;remainder()&nbsp;real-number remainder after 
+division<br>
+&nbsp;&nbsp;&nbsp;&nbsp;deg2rad()&nbsp;&nbsp;&nbsp;multiply by 
+PI/180.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rad2deg()&nbsp;&nbsp;&nbsp;multiply by 
+180.0/PI<br>
+&nbsp;&nbsp;&nbsp;&nbsp;round()&nbsp;&nbsp;&nbsp;round (toward +inf.) first number to the place defined by second number (0.1, 1, 10, 100, etc.)<br>
+Note: for trigonometric functions, the default angle encoding is 
+radians.  From the GUI or command-line, the encoding can be switched 
+to degrees.
+</p>
+Flume will provide the following constant values:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;PI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.141592...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.7182818... 
+(lower-case only!)<br>
+
+<a name="refs"></a>
+<H2>Referring to Prior Results</H2>
+<p>
+You may reuse prior results in an expression using absolute or 
+relative references. </p>
+<p>Absolute references specify an expression row (or "result") number 
+in the form of r[n], where n is the row number from 0 (the first row 
+number) up to the maximum.  No matter 
+where the absolute reference shows up, it refers to the same 
+expression row. Warning: referring to a higher-number row will recall the 
+old calculation result for that row, which may change during the 
+subsequent calculations.</p>
+
+<p>Relative references specify an expression row a specified number of 
+rows displaced from the row containing the reference.  The form of 
+relative references is p[n], where n is the number of rows offset in 
+the prior direction.  For example, p[1] refers to the immediately 
+<strong>prior</strong> row and p[2] refers to an expression two rows back.  Negative 
+values for the row offset will make forward-references, which may produce 
+inconsistent results.</p>
+
+<p>When Flume parses expressions, the single-quote character (') will be 
+automatically expanded into p[1], while the double-quote character 
+(") will be automatically expanded into p[2], making it a little  
+more convenient to chain calculations together as you type them in.</p>
+
+<a name="files"></a>
+<H2>Files</H2>
+<p>
+Flume may open and insert the contents of a text file into the main 
+work area.  This can be done by specifying a file on the command-line 
+or by pressing the "Open" button in the GUI and selecting a file.  
+The file selection dialog defaults to browsing files with the 
+".flume" filename extension, but ".ume", ".txt" or all files may be 
+browsed by changing the filter field.</p>
+
+<p>If the file contents are successfully retrieved, Flume will attempt 
+to evaluate each line of the file.  If any line is not a valid 
+expression, Flume will report an error and place the editing cursor at 
+the end of that expression. The name the retrieved file is displayed 
+in the GUI main window title.  If the content has been modified, the 
+filename in the title will show an asterisk (*) prefix.</p>
+
+<p>You may save your current workspace content as long as there has 
+been at least one valid expression.  The entire workspace content is 
+saved to the file, even if some of that content has not been parsed 
+and calculated yet.  After Flume successfully writes the current workspace 
+content to the file, the file modification flag and title asterisk is 
+cleared.</p>
+
+<p>If the file modification flag is currently set when try to quit or 
+open a new file, you 
+will be notified that quitting will cause the modifications to be 
+discarded.  You may either choose to discard and quit anyway or chose 
+to cancel the quit request so you may save the modified content.</p>
+
+<a name="quirks"></a>
+<H2>Quirks and Tricks</H2>
+<p>
+Flume doesn't (yet?) handle imaginary numbers, so sqrt(-1) returns "-nan"
+(not a number).</p>
+<p>
+Multiple sequential "raise to the power" operators will expand into a 
+strange looking expression, but will calculated OK.  For example, 
+3^2^2 will expand to (3 ^ (2) ^ 2), but will still equal 81. Use 
+parentheses if an exponent is a complicated expression.
+</p>
+<p>
+Flume keeps track of the format of a number (integer, hexadecimal, etc.), 
+and most results will "inherit" the format of the last number entered.
+You can exploit this behavior with the Multiplicative Identity (multiply by 
+one), using the form of the number one you want to convert the first number
+or expression to.  For example, to convert 192 into hexadecimal:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$ flume 192 x 0x01[enter]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;192 x 0x01 = 0xC0<br>
+ </p>
+<p>
+To convert 1/1000 into scientific notation:<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;$ flume "(1.0/1000) * 1e0"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(1.0 / 1000) * 1e0 = 1.000000e-03<br>
+</p>
+
+<a name="support"></a>
+<H2>Support</H2>
+<p>Post bug reports and suggestions to the TinyCore Linux Forum 
+(<a href="http://tinycorelinux.com/forum/">http://tinycorelinux.com/forum/</a>) in the
+Tiny Core Extensions (TCE) area.
+</p>
+<p>Michael A. Losh</p>
+</body>
+</html>

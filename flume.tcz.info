@@ -1,0 +1,24 @@
+Title:          flume.tcz
+Description:    Mathematics scratchpad / calculator
+Version:        0.9.2 BETA
+Author:         Michael A. Losh
+Original-site:  http://tinycorelinux.com
+Copying-policy: GPLv3
+Size:           32K
+Extension_by:   Michael A. Losh
+Comments:       PPI compatible.
+-
+                Flume is a fast, light utilitarian math environment.  
+                It can be used from the command-line for simple 
+                calculations, or in GUI form as a desktop calculator or 
+                a one-column spreadsheet. Flume uses the FLTK user 
+                interface library, which makes it is especially 
+                efficient on TinyCore Linux.
+                
+                CAUTION: This is a BETA version.  Use with care and 
+                please report issues and suggestions!
+                
+Change-log:     2010/11/07 Original BETA version 0.9.0
+                
+Current:        2010/12/28 BETA version 0.9.2 with RPN, Sig. digits, 
+                better mixed type handling, new round() function
